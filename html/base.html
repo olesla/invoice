@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>{{ template "title" . }}</title>
+        <link rel="stylesheet" href="/static/variables.css">
+        <link rel="stylesheet" href="/static/elements.css">
+        <link rel="stylesheet" href="/static/classes.css">
+    </head>
+    <body>
+
+        <nav>
+            <h1><a href="/">Faktura</a></h1>
+            <div>
+                <a href="/customers">Kunder</a>
+                <a href="/products">Produkter</a>
+                <a href="/invoices">Fakturaer</a>
+            </div>
+          </nav>
+
+          <div class="main">
+            <div class="container">
+                <h2 class="crumbs">{{ template "crumbs" . }}</h2>
+                {{ template "body" . }}
+            </div>
+        </div>
+    </body>
+</html>

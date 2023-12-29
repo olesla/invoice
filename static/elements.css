@@ -1,0 +1,40 @@
+* {
+    margin: 0;
+    padding: 0;
+    /* font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif; */
+    font-family: monospace;
+    color: #e5d9d9;
+}
+body {
+    background-color: #1d1e1e;
+}
+h1 {
+    color: #e5d9d9;
+}
+nav {
+    background-color: #131414 !important;
+    padding: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+}
+table {
+    width: 100%;
+}
+th {
+    text-align: left;
+}
+input, select, button, option {
+    color: black;
+	padding: 0.2rem;
+	margin: 0.2rem 0rem;
+	display: inline-block;
+	border: 1px solid #ccc;
+	border-radius: 1px;
+	box-sizing: border-box;
+}
+section {
+    margin-top: 2.5rem;
+}
+td > input, select {
+    width: 95%;
+}

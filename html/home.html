@@ -1,0 +1,20 @@
+{{ define "title" }}
+    {{ .PageTitle }}
+{{ end }}
+
+{{ define "crumbs" }}
+    Oversikt
+{{ end }}
+
+{{ define "body" }}
+    <section>
+        Legg til noe her..
+    </section>
+    <ul>
+        {{ range .Invoices }}
+        <li>
+            {{ .Date }}
+        </li>
+        {{ end }}
+    </ul>
+{{ end }}

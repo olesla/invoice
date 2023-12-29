@@ -1,0 +1,52 @@
+{{ define "title" }}
+    {{ .PageTitle }}
+{{ end }}
+
+
+{{ define "crumbs" }}
+    <a href="/products">Produkter</a> / Opprett
+{{ end }}
+
+{{ define "body" }}
+    <table>
+        <tbody>
+            <tr>
+                <th>Navn</th>
+                <td><input id="name" type="text" placeholder="Navn"></td>
+            </tr>
+            <tr>
+                <th>Beskrivelse</th>
+                <td><input id="description" type="text" placeholder="Beskrivelse"></td>
+            </tr>
+            <tr>
+                <th>Kode</th>
+                <td><input id="code" type="text" placeholder="Kode"></td>
+            </tr>
+            <tr>
+                <th>Pris</th>
+                <td><input id="price" type="number" placeholder="Pris"></td>
+            </tr>
+            <tr>
+                <th></th>
+                <td><button id="save" class="btn">Lagre</button></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <script defer>
+        const saveButton = document.querySelector("#save")
+
+        saveButton.addEventListener("click", async () => {
+            const name = document.querySelector("#name").value
+            const description = document.querySelector("#description").value
+            const code = document.querySelector("#code").value
+            const price = parseInt(document.querySelector("#price").value)
+            const body = JSON.stringify({ name, description, code, price })
+
+            const response = await fetch('/products', { method: 'POST', body })
+            if (response.status === 201) {
+                location.replace("/products")
+            }
+        })
+    </script>
+{{ end }}

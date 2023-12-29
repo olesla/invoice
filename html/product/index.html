@@ -1,0 +1,34 @@
+{{ define "title" }}
+    {{ .PageTitle }}
+{{ end }}
+
+{{ define "crumbs" }}
+Produkter
+{{ end }}
+
+{{ define "body" }}
+    <a class="btn mb-5" href="/products/new">Opprett</a>
+
+    <section>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Navn</th>
+                    <th>Beskrivelse</th>
+                    <th>Kode</th>
+                    <th>Pris</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{ range .Products }}
+                    <tr>
+                        <td>{{ .Name }}</td>
+                        <td>{{ .Description }}</td>
+                        <td>{{ .Code }}</td>
+                        <td>{{ .Price }}</td>
+                    </tr>
+                {{ end }}
+            </tbody>
+        </table>
+    </section>
+{{ end }}

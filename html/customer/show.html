@@ -1,0 +1,85 @@
+{{ define "title" }}
+    {{ .PageTitle }}
+{{ end }}
+
+{{ define "crumbs" }}
+    <a href="/customers">Kunder</a> / {{ .Customer.Name }}
+{{ end }}
+
+{{ define "body" }}
+    <h2>Kundeinformasjon</h2>
+    <section>
+        <table>
+            <tbody>
+                <tr>
+                    <th>Navn</th>
+                    <td>{{ .Customer.Name }}</td>
+                </tr>
+                <tr>
+                    <th>Telefon</th>
+                    <td>{{ .Customer.Number }}</td>
+                </tr>
+                <tr>
+                    <th>Adresse</th>
+                    <td>{{ .Customer.Address }}</td>
+                </tr>
+                <tr>
+                    <th>E-post</th>
+                    <td>{{ .Customer.Email }}</td>
+                </tr>
+                <tr>
+                    <th>Org.nr</th>
+                    <td>{{ .Customer.Org }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+
+    <section>
+        <h2>Faktura</h2>
+    </section>
+    <section>
+        <a class="btn" href="/customers/{{ .Customer.ID }}/invoices/new">Opprett</a>
+    </section>
+    <section>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Fakturanummer</th>
+                    <th>Fakturadato</th>
+                    <th>Forfall</th>
+                    <th>Sendt</th>
+                    <th>Betalt</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {{ range .Customer.Invoices }}
+                    <tr>
+                        <td>{{ .Number }}</td>
+                        <td>{{ .Date.Format "02.01.2006" }}</td>
+                        <td>{{ .Due.Format "02.01.2006" }}</td>
+                        <td>
+                            {{ if .Sent }}
+                                Ja
+                            {{ else }}
+                                Nei
+                            {{ end }}
+                        </td>
+                        <td>
+                            {{ if .Paid }}
+                                Ja
+                            {{ else }}
+                                Nei
+                            {{ end }}
+                        </td>
+                        <td>
+                            <a href="/invoices/{{ .ID }}">Åpne</a>
+                        </td>
+                    </tr>
+                {{ end }}
+            </tbody>
+        </table>
+    </section>
+{{ end }}
