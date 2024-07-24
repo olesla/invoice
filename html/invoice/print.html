@@ -1,0 +1,118 @@
+<style>
+    th {
+        text-align: left;
+    }
+    .text-right {
+        text-align: right;
+    }
+    table {
+        width: 500px;
+    }
+</style>
+
+
+<table>
+    <tr>
+        <td>Ikke mva-pliktig</td>
+    </tr>
+    <tr>
+        <td>{{ .CompanyName }}</td>
+    </tr>
+    <tr>
+        <td>{{ .CompanyAddress }}</td>
+    </tr>
+    <tr>
+        <td>Org.nr: {{ .CompanyOrgNumber }}</td>
+    </tr>
+    <tr>
+        <td>{{ .CompanyPhone }}</td>
+    </tr>
+    <tr>
+        <td><a href="mailto:slaattene@gmail.com">slaattene@gmail.com</a></td>
+    </tr>
+</table>
+
+<hr>
+<h2>Faktura</h2>
+<table>
+    <tr>
+        <th>Fakturanummer</th>
+        <td>{{ .Invoice.Number }}</td>
+    </tr>
+    <tr>
+        <th>Faktura til</th>
+        <td>{{ .Invoice.Customer.Name }}</td>
+    </tr>
+    <tr>
+        <th></th>
+        <td>{{ .Invoice.Customer.Address }}</td>
+    </tr>
+    <tr>
+        <th></th>
+        <td>Org.nr {{ .Invoice.Customer.Org }}</td>
+    </tr>
+    <tr>
+        <th></th>
+        <td>{{ .Invoice.Customer.Email }}</td>
+    </tr>
+    <tr>
+        <th>Fakturadato</th>
+        <td>{{ .Invoice.CreatedAt.Format "Jan 02, 2006" }}</td>
+    </tr>
+    <tr>
+        <th>Forfallsdato</th>
+        <td>{{ .Invoice.Due.Format "Jan 02, 2006" }}</td>
+    </tr>
+</table>
+
+<hr>
+<h2>Spesifikasjon</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Produkt</th>
+            <th class="text-right">Pris</th>
+            <th class="text-right">Antall</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{ range .Products }}
+        <tr>
+            <td>{{ .Name }}</td>
+            <td class="number text-right">{{ .Price }}</td>
+            <td class="text-right">{{ .Amount }}</td>
+        </tr>
+        {{ end }}
+        <tr>
+            <th>Å betale</th>
+            <td class="number text-right">{{ .Invoice.Sum }}</td>
+        </tr>
+    </tbody>
+</table>
+
+<hr>
+
+Betales til kontonummer {{ .CompanyAccountNumber }}
+
+<script defer>
+    function formatNumber(number) {
+        if (isNaN(number)) {
+            return ""
+        }
+        const currencyOptions = new Intl.NumberFormat("nb-NO", {
+            style: "currency",
+            currency: "NOK",
+        }).resolvedOptions()
+        return number.toLocaleString("nb-NO", {
+            ...currencyOptions,
+            style: "decimal",
+        })
+    }
+    function formatNumbers() {
+        document.querySelectorAll(".number").forEach(x => {
+            const number = parseFloat(x.innerHTML)
+            x.innerHTML = formatNumber(number)
+        })
+    }
+    formatNumbers()
+</script>

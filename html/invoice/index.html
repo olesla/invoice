@@ -1,0 +1,52 @@
+{{ define "title" }}
+    {{ .PageTitle }}
+{{ end }}
+
+{{ define "crumbs" }}
+Fakturaer
+{{ end }}
+
+{{ define "body" }}
+
+    <section>
+        <table>
+            <thead>
+                <tr>
+                    <th>Fakturanummer</th>
+                    <th>Kunde</th>
+                    <th>Fakturadato</th>
+                    <th>Forfall</th>
+                    <th>Sendt</th>
+                    <th>Betalt</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{ range .Invoices }}
+                    <tr>
+                        <td>{{ .Number }}</td>
+                        <td>{{ .Customer.Name }}</td>
+                        <td>{{ .Date.Format "02.01.2006" }}</td>
+                        <td>{{ .Due.Format "02.01.2006" }}</td>
+                        <td>
+                            {{ if .Sent }}
+                                Ja
+                            {{ else }}
+                                Nei
+                            {{ end }}
+                        </td>
+                        <td>
+                            {{ if .Paid }}
+                                Ja
+                            {{ else }}
+                                Nei
+                            {{ end }}
+                        </td>
+                        <td>
+                            <a href="/invoices/{{ .ID }}">Åpne</a>
+                        </td>
+                    </tr>
+                {{ end }}
+            </tbody>
+        </table>
+    </section>
+{{ end }}

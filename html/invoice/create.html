@@ -1,0 +1,181 @@
+{{ define "title" }}
+    {{ .PageTitle }}
+{{ end }}
+
+{{ define "crumbs" }}
+    <a href="/customers">Kunder</a> / 
+    <a href="/customers/{{ .Customer.ID }}">{{ .Customer.Name }}</a> / 
+    Ny faktura
+{{ end }}
+
+{{ define "body" }}
+    <section>
+        <table>
+            <tbody>
+                <tr>
+                    <th>Fakturadato</th>
+                    <td>
+                        <input id="date" type="date" placeholder="Fakturadato">
+                    </td>
+                </tr>
+                <tr>
+                    <th>Forfall</th>
+                    <td>
+                        <input id="due" type="date" placeholder="Forfall">
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        <label for="products">Produkter</label>
+                    </th>
+                    <td>
+                        <select name="products" id="products">
+                        {{ range .Products }}
+                        <option value="{{ .ID }}" data-price="{{ .Price }}">{{ .Name }}</option>
+                        {{ end }}
+                        </select>
+                    </td>
+                    <td>
+                        <button id="addProduct" class="btn-secondary">Legg til</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section>
+        <h2>Produkter</h2>
+    </section>
+
+    <section>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Navn</th>
+                    <th>Pris</th>
+                    <th>Antall</th>
+                </tr>
+            </thead>
+            <tbody id="addedProducts">
+    
+            </tbody>
+            <tbody>
+                <tr>
+                    <th>SUM</th>
+                    <td id="sum"></td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section>
+        <button id="save" class="btn">Lagre</button>
+    </section>
+
+    <script defer>
+        const addProductButton = document.querySelector("#addProduct")
+        const saveButton = document.querySelector("#save")
+        const addedProductsEle = document.querySelector("#addedProducts")
+        const sumCol = document.querySelector("#sum")
+        
+        addProductButton.addEventListener("click", () => {
+            const productOpt = document.querySelector("#products")
+            const id = productOpt.value
+            const name = productOpt.selectedOptions[0].innerText
+            const price = productOpt.selectedOptions[0].dataset.price
+            addProductToTable({id, name, price})
+        })
+    
+        saveButton.addEventListener("click", async () => {
+            const due = document.querySelector("#due").value
+            const date = document.querySelector("#date").value
+            const products = createProducts()
+            const sum = parseFloat(sumCol.innerText)
+            const body = JSON.stringify({ date, due, products, sum })
+    
+            const response = await fetch('/customers/{{.Customer.ID}}/invoices/create', { method: 'POST', body })
+            if (response.status === 201) {
+                location.replace('/customers/{{.Customer.ID}}')
+            }
+        })
+    
+        /**
+         * Add a product to the products table
+         * @param {Object} product
+         * @param {string} product.id
+         * @param {string} product.name
+         * @param {string} product.price
+         * @return {void}
+         **/
+        function addProductToTable(product) {
+            const tr = document.createElement("tr")
+    
+            const id = document.createElement("td")
+            id.innerText = product.id
+    
+            const name = document.createElement("td")
+            name.innerText = product.name
+    
+            const price = document.createElement("td")
+            price.innerHTML = product.price
+    
+            const amount = document.createElement("td")
+            const amountInput = document.createElement("input")
+            amountInput.value = 1
+            amountInput.addEventListener("change", () => {
+                updateSum()
+            })
+            amount.appendChild(amountInput)
+    
+            const remove = document.createElement("td")
+            const removeButton = document.createElement("button")
+            removeButton.innerText = "Fjern"
+            removeButton.classList.add("btn-secondary")
+            removeButton.addEventListener("click", () => {
+                tr.remove()
+                updateSum()
+            })
+            remove.appendChild(removeButton)
+    
+            tr.appendChild(id)
+            tr.appendChild(name)
+            tr.appendChild(price)
+            tr.appendChild(amount)
+            tr.appendChild(remove)
+            addedProductsEle.appendChild(tr)
+    
+            updateSum()
+        }
+    
+        /**
+         * Update sum column
+         * @return {void}
+         **/
+        function updateSum() {
+            const products = createProducts()
+            let sum = 0
+            for (const product of products) {
+                sum += (product.price * product.amount)
+            }
+            sumCol.innerText = sum
+        }
+    
+        /**
+         * Create an array or product objects from table
+         * @return {object}
+         **/
+        function createProducts() {
+            const rows = Array.from(addedProductsEle.children)
+            const products = []
+            for (const row of rows) {
+                const id = parseInt(row.children[0].innerText)
+                const name = row.children[1].innerText
+                const price = parseFloat(row.children[2].innerText)
+                const amount = parseInt(row.children[3].children[0].value)
+                products.push({id, name, price, amount})
+            }
+            return products
+        }
+    </script>
+{{ end }}

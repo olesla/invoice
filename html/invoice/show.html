@@ -1,0 +1,68 @@
+{{ define "title" }}
+    {{ .PageTitle }}
+{{ end }}
+
+{{ define "crumbs" }}
+    <a href="/customers">Kunder</a> /
+    <a href="/customers/{{ .Invoice.Customer.ID }}">{{ .Invoice.Customer.Name }}</a> /
+    Faktura {{ .Invoice.Number }}
+{{ end }}
+
+{{ define "body" }}
+    <section>
+        <h2>Informasjon</h2>
+    </section>
+    <section>
+        <table>
+            <tbody>
+                <tr>
+                    <th>Sendt</th>
+                    {{ if .Invoice.Sent }}
+                    <td>Ja</td>
+                    {{ else }}
+                    <td>Nei</td>
+                    {{ end }}
+                </tr>
+                <tr>
+                    <th>Betalt</th>
+                    {{ if .Invoice.Paid }}
+                    <td>Ja</td>
+                    {{ else }}
+                    <td>Nei</td>
+                    {{ end }}
+                </tr>
+                <tr>
+                    <th>Print</th>
+                    <td><a href="/invoices/{{ .Invoice.ID }}?view=print">PDF</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section>
+        <h2>Produkter</h2>
+    </section>
+    <section>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Navn</th>
+                    <th>Pris</th>
+                    <th>Antall</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{ range .Products }}
+                <tr>
+                    <td>{{ .Name }}</td>
+                    <td>{{ .Price }}</td>
+                    <td>{{ .Amount }}</td>
+                </tr>
+                {{ end }}
+            </tbody>
+        </table>
+    </section>
+    <section>
+        Total: {{ .Invoice.Sum }}
+    </section>
+{{ end }}
